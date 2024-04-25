@@ -1,0 +1,64 @@
+@import './base.css';
+:root {
+  --white: hsl(0, 0%, 100%);
+
+  --light-mode-background: hsla(0, 0%, 98%, 0.776);
+  --light-mode-input: hsl(0, 0%, 52%);
+  --light-mode-text: hsl(200, 15%, 8%);
+
+  --dark-mode-background:  hsl(207, 26%, 17%);
+  --dark-mode-element: hsl(209, 23%, 22%);
+
+}
+
+.homepage-text {
+  font-size: 14px;
+}
+
+.detail-page {
+  font-size: 16px;
+}
+
+.fw-3 {
+  font-weight: 300;
+}
+
+.fw-6 {
+  font-weight: 600;
+}
+
+.fw-8 {
+  font-weight: 800;
+}
+
+.light-theme {
+  background-color: var(--light-mode-background);
+  color: var(--light-mode-text);
+}
+
+.dark-theme {
+  background-color: var(--dark-mode-background);
+  color: var(--white);
+}
+
+.darkmode-el {
+  background-color: var(--dark-mode-element);
+  color: var(--white);
+  input {
+    color: var(--white);
+    caret-color: var(--white);
+  }
+}
+
+.lightmode-el {
+  background-color: var(--white);
+  color: var(--light-mode-text);
+  input {
+    color: var(--dark-mode-background);
+    caret-color: var(--dark-mode-background);
+  }
+}
+
+.shadow-bottom {
+  box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);
+}
