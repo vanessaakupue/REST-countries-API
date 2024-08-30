@@ -57,7 +57,6 @@ import { RouterView } from 'vue-router';
      if (savedTheme) {
        this.theme = savedTheme;
      }
-     console.log('Theme:', this.theme);
    }
  }
  

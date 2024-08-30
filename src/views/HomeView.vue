@@ -78,8 +78,8 @@ export default {
     goToAbout(item) {
       this.$router.push({
         name: 'about',
-        params: { id: item.id},
-        query: { search: this.search, region: this.selectedRegion, item: JSON.stringify(item) }
+        params: { name: item.name.common},
+        // query: { search: this.search, region: this.selectedRegion }
       })
     },
     cleanUpValue(value) {
@@ -108,16 +108,20 @@ export default {
     },
     toggleDropdown() {
       this.showDropdown = !this.showDropdown
-      console.log("dropdown:", this.showDropdown)
+      // console.log("dropdown:", this.showDropdown)
     },
     filterByRegion(region) {
       this.selectedRegion = region;
       this.showDropdown = false;
       this.updateQuery();
     },
-    updateQuery() {
+     updateQuery() {
+      const query = {};
+      if (this.search) query.search = this.search;
+      if (this.selectedRegion) query.region = this.selectedRegion;
+
       this.$router.push({
-        query: { search: this.search, region: this.selectedRegion }
+        query
       });
     },
     extractRegions() {
@@ -132,7 +136,10 @@ export default {
 
       if(this.search) {
         const searchString = this.search.toLowerCase();
-        filteredItems = filteredItems.filter(item => item.name.common.toLowerCase().includes(searchString));
+        filteredItems = filteredItems.filter(item => {
+          const capital = item.capital ? item.capital.join(', ').toLowerCase() : '';
+          return item.name.common.toLowerCase().includes(searchString) || capital.includes(searchString)
+        });
       }
 
       if(this.selectedRegion) {
@@ -147,7 +154,7 @@ export default {
       fetch("https://restcountries.com/v3.1/all")
       .then (response => response.json() )
       .then (data => {
-        console.log("fetched data:", data)
+        // console.log("fetched data:", data)
         this.items = data.sort((a, b) => a.name.common.localeCompare(b.name.common));
         this.extractRegions();
       })

@@ -121,8 +121,7 @@ export default {
       if (borderCountry) {
         this.$router.push({
           name: 'about',
-          params: { id: borderCountry.id },
-          query: { item: JSON.stringify(borderCountry) }
+          params: { name: borderCountry.name.common },
         })
       }
     },
@@ -130,15 +129,19 @@ export default {
       fetch("https://restcountries.com/v3.1/all")
       .then (response => response.json() )
       .then (data => {
-        console.log("fetched data:", data)
+        // console.log("fetched data:", data)
         this.items = data.sort((a, b) => a.name.common.localeCompare(b.name.common));
+        this.initializeItem();
         this.initializeTooltips();
       })
       .catch (error => {console.log(error);
       })
     },
     initializeItem() {
-      this.item = JSON.parse(this.$route.query.item);
+      const name = this.$route.params.name;
+      if (name) {
+        this.item = this.items.find(item => item.name.common === name);
+      }
       this.scrollToTop();
     },
     scrollToTop() {
@@ -146,28 +149,28 @@ export default {
     },
     initializeTooltips() {
       this.$nextTick(() => {
-        this.item.borders.forEach(border => {
-          const country = this.items.find(item => item.cca3 === border);
-          const commonName = country.name.common ;
-          const tippyTheme = this.theme === 'light' ? 'light-tippy' : 'dark-tippy';
-          tippy(this.$refs[border], {
-            content: commonName,
-            theme: tippyTheme,
-            duration: 500,
+        if (this.item && Array.isArray(this.item.borders)) {
+          this.item.borders.forEach(border => {
+            const country = this.items.find(item => item.cca3 === border);
+            const commonName = country.name.common ;
+            const tippyTheme = this.theme === 'light' ? 'light-tippy' : 'dark-tippy';
+            tippy(this.$refs[border], {
+              content: commonName,
+              theme: tippyTheme,
+              duration: 500,
+            });
           });
-        });
+        }
       });
     }
   },
   watch: {
-    '$route.query.item': 'initializeItem'
+    '$route.params.name': 'initializeItem',
   },
   mounted() {
-    if (this.$route.query.item) {
-      this.item = JSON.parse(this.$route.query.item);
+    if (this.$route.params.name) {
+      this.fetchAllCountries();
     }
-    this.fetchAllCountries();
-    this.initializeItem();
   },
   updated() {
     this.initializeTooltips();
